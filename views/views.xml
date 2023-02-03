@@ -1,7 +1,7 @@
 <odoo>
   <data>
         <!-- Automation Form View -->
-        <record id="prevent_archive_automated_action" model="base.automation">
+<!--         <record id="prevent_archive_automated_action" model="base.automation">
             <field name="name">Send created product to clicOdeal</field>
             <field name="model_id" ref="model_product_template"/>
             <field name="trigger">on_create</field>
@@ -11,6 +11,19 @@
 for record in records:
   record.api_send_product()
             </field>
+        </record> -->
+
+        <!-- Ajouter champ seuil dans Product template -->
+        <record id="add_field_seuil_in_pt_view_form" model="ir.ui.view">
+          <field name="name">product.template.inherit</field>
+          <field name="model">product.template</field>
+          <field name="inherit_id" ref="product.product_template_only_form_view"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="barcode"]' position="after">
+              <field name="seuil"/>
+              <field name="to_send" invisible="1"/>
+            </xpath>
+          </field>
         </record>
   </data>
 </odoo>
