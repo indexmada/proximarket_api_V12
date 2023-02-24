@@ -36,3 +36,9 @@ class productTemplate(models.Model):
     #     headers = {'content-type':'application/json'}
     #     requests.get(url, data=json.dumps(data), headers=headers)
     #     return 'var'
+
+
+class StockLocation(models.Model):
+    _inherit = "stock.location"
+
+    stock_cod = fields.Boolean("Stock COD")

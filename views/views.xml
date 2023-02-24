@@ -25,5 +25,16 @@ for record in records:
             </xpath>
           </field>
         </record>
+        <record id="add_stock_cod_field" model="ir.ui.view">
+          <field name="name">stock.location.stock.cod</field>
+          <field name="model">stock.location</field>
+          <field name="inherit_id" ref="stock.view_location_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//h2" position="after">
+              <label for="stock_cod"/>
+              <field name="stock_cod"/>
+            </xpath>
+          </field>
+        </record>
   </data>
 </odoo>

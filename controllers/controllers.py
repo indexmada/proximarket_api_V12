@@ -38,7 +38,13 @@ class IndexCustomApi(http.Controller):
         data = []
         for product in products:
             product.write({"to_send": False})
-            qty_tosend = (product.qty_available * product.seuil)/100
+            qty_tosend = 0
+            stock_qty = request.env['stock.quant'].sudo().search([('product_tmpl_id', '=', product.id), ('location_id.usage', '=', 'internal'),('location_id.stock_cod','=', True)])
+            for i in stock_qty:
+
+                qty_tosend = qty_tosend + i.quantity 
+
+            qty_tosend = (qty_tosend * product.seuil)/100
             values = {
                 'name': product.name,
                 'display_name': product.display_name,
