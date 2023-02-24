@@ -40,11 +40,11 @@ class IndexCustomApi(http.Controller):
             product.write({"to_send": False})
             qty_tosend = (product.qty_available * product.seuil)/100
             values = {
-                'product_name': product.name,
-                'product_display_name': product.display_name,
-                'product_cost': product.standard_price,
-                'product_barcode': product.barcode,
-                'quantity': qty_tosend,
+                'name': product.name,
+                'display_name': product.display_name,
+                'standard_price': product.standard_price,
+                'barcode': product.barcode,
+                'qty_available': qty_tosend,
             }
             data.append(values)
 
