@@ -2,6 +2,7 @@
 from odoo import http
 from odoo.http import request
 import json
+from datetime import datetime
 
 class IndexCustomApi(http.Controller):
     @http.route('/index_custom_api/product/api/', auth='public', website=False, csrf=False, type="json", methods=['GET', 'POST'])
@@ -56,3 +57,50 @@ class IndexCustomApi(http.Controller):
 
         json_data = json.dumps(data)
         return json_data
+
+    @http.route('/index_custom_api/sale_order/api/', auth='public', website=False, csrf=False, type="json", methods=['GET', 'POST'])
+    def index_sale_order(self, **kw):
+        login_ok = kw.get('login') and kw.get('login') == 'IndexMadaApi'
+        password_ok = kw.get('password') and kw.get('password') == 'Indexconsapi2023'
+        if login_ok and password_ok:
+            if kw.get('orders'):
+                # partner_id = request.env['res.partner'].browse(7).id
+                orders = json.loads(kw.get('orders'))
+                if orders:
+                    for order in orders:
+                        partner = request.env['res.partner'].sudo().search([('name', '=', order['partner_name'])], limit=1)
+                        if not partner:
+                            partner = request.env['res.partner'].sudo().create({'name': order['partner_name']})
+                        if order['date_order']:
+                            date_order = datetime.strptime(order['date_order'], '%d/%m/%Y').date()
+                        else:
+                            date_order = False
+                        if order['order_line']:
+                            line_tab = []
+                            for line in order['order_line']:
+                                line_vals = {}
+                                product_id = request.env['product.product'].sudo().search([('barcode','=', line['barcode'])], limit=1)
+                                if product_id:
+                                    line_vals['product_id'] = product_id.id
+                                    line_vals['product_uom_quantity'] = line['quantity'] or 1
+                                    line_tab.append(line_vals)
+                                else:
+                                    line_vals = False
+
+                        if line_tab and len(line_tab) != 0:
+                            vals = {
+                                "partner_id": partner.id,
+                                "date_order": date_order or None,
+                                "order_line": [(0,0, line_tab[0])]
+                            }
+                            new_order = request.env['sale.order'].sudo().create(vals)
+                            count = 0
+                            for l in line_tab:
+                                if count != 0:
+                                    new_order.sudo().write({'order_line': [(0,0, l)]})
+                                count +=1
+                        else:
+                            return "No order created!"
+        else:
+            return 'You are not allowed to access this Api'
+        return 'Order Successfully Created.'
