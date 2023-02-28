@@ -12,7 +12,7 @@ class productTemplate(models.Model):
     seuil = fields.Float("Seuil")
     to_send = fields.Boolean("To send", default=True)
 
-    @api.onchange('standard_price', 'name', 'barcode','qty_available')
+    @api.onchange('standard_price', 'name', 'barcode','qty_available', 'seuil')
     def change_to_send_state(self):
         for record in self:
             record.to_send = True
