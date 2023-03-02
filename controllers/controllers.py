@@ -35,7 +35,7 @@ class IndexCustomApi(http.Controller):
         domain = [('type','=', 'product')]
         # if kw.get('ugs'):
         #     domain += [('barcode', 'in', kw.get('ugs'))]
-        products = request.env['product.template'].sudo().search(domain, limit=20)
+        products = request.env['product.template'].sudo().search(domain)
         data = []
         for product in products:
             product.write({"to_send": False})
