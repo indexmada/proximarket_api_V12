@@ -50,6 +50,7 @@ class IndexCustomApi(http.Controller):
                 'name': product.name,
                 'display_name': product.display_name,
                 'standard_price': product.standard_price,
+                'public_price': product.lst_price or product.list_price,
                 'barcode': product.barcode,
                 'qty_available': qty_tosend,
             }
